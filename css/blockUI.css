@@ -1,0 +1,35 @@
+.block_ui--overlay
+{
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    width: 100vw;
+    height:100vh;
+    display: block;
+    background: rgba(0,0,0,0.6);
+}
+
+.block_ui--spinner_wrapper
+{
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.block_ui--spinner
+{
+    width: 80px;
+    height: 80px;
+    border: 4px #ddd solid;
+    border-top: 4px #999 solid;
+    border-radius: 50%;
+    animation: block_ui--spinner_anime 0.8s infinite linear;
+}
+
+@keyframes block_ui--spinner_anime
+{
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(359deg); }
+}

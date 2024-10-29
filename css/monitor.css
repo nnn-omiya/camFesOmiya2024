@@ -1,0 +1,26 @@
+#main {
+ display : flex;
+}
+
+#que, #complete {
+  width: 48%;
+  height: 100%;
+  font-size: 48px;
+}
+
+#que > p, #complete > p {
+  margin: 0px;
+}
+
+#complete > p {
+  color: #008000;
+}
+
+#a {
+  background-color: #80858d;
+}
+
+#b {
+  background-color: #114111;
+  color: #FFFFFF;
+}

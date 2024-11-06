@@ -6,11 +6,8 @@ function App() {
     { name: 'アイスティー', price: 200 },
     { name: '紅茶', price: 200 },
   ]);
-  const [order, setOrder] = React.useState(
-    menuItems.map(item => ({ item: item.name, quantity: 0 }))
-  );
+  const [order, setOrder] = React.useState(initialOrder());
   const [total, setTotal] = React.useState(0);
-
 
   React.useEffect(() => {
     fetch(`${api_url}/getprice`)
@@ -34,14 +31,18 @@ function App() {
     }, 0));
   }, [order]);
 
+  function initialOrder() {
+    return menuItems.map(item => ({ item: item.name, quantity: 0 }));
+  }
+
   function handleOrder() {
     const data = [{ type: "pos" }];
-    setOrder([]);
     if (order.reduce((sum, item) => sum + item.quantity, 0) > 0) {
       data.push(...order);
-    socket.emit('order', JSON.stringify(data));
-    console.log(JSON.stringify(data));
+      // socket.emit('order', JSON.stringify(data));
+      console.log(JSON.stringify(data));
     }
+    setOrder(initialOrder());
   }
 
   return (

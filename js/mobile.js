@@ -8,6 +8,7 @@ function App() {
   ]);
   const [order, setOrder] = React.useState(initialOrder());
   const [total, setTotal] = React.useState(0);
+  const [orderID, setOrderID] = React.useState("0");
 
   React.useEffect(() => {
     fetch(`${api_url}/getprice`)
@@ -36,10 +37,10 @@ function App() {
   }
 
   function handleOrder() {
-    const data = [{ type: "pos" }];
+    const data = [{ type: "mobile" }];
     if (order.reduce((sum, item) => sum + item.quantity, 0) > 0) {
       data.push(...order);
-      // socket.emit('order', JSON.stringify(data));
+      socket.emit('order', JSON.stringify(data));
       console.log(JSON.stringify(data));
     }
     setOrder(initialOrder());
@@ -141,8 +142,6 @@ function AccordionItem(props) {
 }
 
 socket.on('order_end', function (data) {
-  blockUI.closeOverlayAsync();
-  // toastr.success('注文が完了しました', '注文完了')
   // todo: ログを表示
   console.log(data.orderID);
 });

@@ -14,6 +14,11 @@ socket.on('updateMonitor', function (data) {
   console.log(data);
 });
 
+socket.on('order_share', (message) => {
+  orders = test(message);
+  outputQue(message)
+});
+
 //ここでFetchなどをする
 fetch(api_url + "/getorder")
   .then((response) => {

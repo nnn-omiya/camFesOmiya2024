@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html>
 <head>
   <meta charset="utf-8">
   <meta http-equiv='X-UA-Compatible' content='IE=edge'>
@@ -12,21 +12,23 @@
   integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
   crossorigin="anonymous"></script>
   <script src="https://cdn.socket.io/4.8.0/socket.io.min.js" integrity="sha384-OoIbkvzsFFQAG88r+IqMAjyOtYDPGO0cqK5HF5Uosdy/zUEGySeAzytENMDynREd" crossorigin="anonymous"></script>
-  <script src="bootstrap-number-input.js"></script>
+  <script src="./js/bootstrap-number-input.js"></script>
   <link href="./css/blockUI.css" rel="stylesheet" />
   <script src="./js/blockUI.js"></script>
   <script src="./js/setting.js"></script>
   <link href="./css/monitor.css" rel="stylesheet" />
   <script src="./js/monitor.js"></script>
-
+  
 </head>
 <body>
   <div id="main">
-    <div id="que">
+    <div class="box">
       <h1 id="a">お待ち番号</h1>
+      <div id="que"></div>
     </div>
-    <div id="complete">
+    <div class="box">
       <h1 id="b">お呼び出し中の番号</h1>
+      <div id="complete"></div>
     </div>
   </div>
 

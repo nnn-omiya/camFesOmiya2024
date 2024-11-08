@@ -59,10 +59,12 @@ async function send_data(e) {
     let amount = a.querySelectorAll(".amount")[0];
     data.push({item: amount.dataset.name, quantity: amount.value})
   });
-  console.log(JSON.stringify(data))
+  //console.log(JSON.stringify(data))
 
   blockUI.showOverlayAsync();
   socket.emit('order', JSON.stringify(data));
+  audio.src='ok.mp3';
+  audio.play(); //audioを再生
 }
 
 function recalc() {
@@ -110,5 +112,5 @@ document.querySelector('#keypad').addEventListener('click', (event) => {
 socket.on('order_end', function (data) {
   blockUI.closeOverlayAsync(); 
   toastr.success('注文が完了しました', '注文完了')
-  console.log(data.orderID);
+  //console.log(data.orderID);
 });

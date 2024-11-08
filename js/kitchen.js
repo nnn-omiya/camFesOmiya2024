@@ -88,7 +88,7 @@ socket.on('disconnect', function (data) {
   //console.log(data);
   socket.disconnect();
 });
-socket.on('order', (message) => {
-  insertTable(JSON.parse(message))
+socket.on('order_share', (message) => {
   console.log(message)
+  insertTable(message)
 });

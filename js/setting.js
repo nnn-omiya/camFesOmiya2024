@@ -1,2 +1,2 @@
-const server_address = "10.8.100.229"
-const api_url = `http://${server_address}/api.php`;
+const server_address = "10.8.100.117"
+const api_url = `http://${server_address}:8080`;

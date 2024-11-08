@@ -2,11 +2,12 @@ const socket = io.connect(`http://${server_address}:8080`, { transports: [ 'webs
 
 function App() {
   const [menuItems, setMenuItems] = React.useState([
-    { name: 'ミルクティー', price: 200 },
-    { name: 'アイスティー', price: 200 },
-    { name: '紅茶', price: 200 },
+    { name: 'ミルクティー', price: 2 },
+    { name: 'アイスティー', price: 2 },
+    { name: '紅茶', price: 2 },
   ]);
   const [order, setOrder] = React.useState(initialOrder());
+  const [isOrdered, setIsOrdered] = React.useState(false);
   const [total, setTotal] = React.useState(0);
   const [orderID, setOrderID] = React.useState("0");
 
@@ -17,6 +18,7 @@ function App() {
       })
       .then((result) => {
         setMenuItems(result)
+        console.log(result)
         addButton()
       })
       .catch((e) => {
@@ -46,23 +48,26 @@ function App() {
     setOrder(initialOrder());
   }
 
+  socket.on('order_end', (data) => {
+    setOrderID(data.orderID);
+    console.log(data.orderID);
+  });
+
   return (
-    <div className="p-4">
+    <div className="p-4 relative w-screen h-screen">
       <h1 className="text-xl font-bold mb-4">イノキャン紅茶店()</h1>
       <AccordionMenu
         menuItems={menuItems}
         order={order}
         setOrder={setOrder}
       />
-      <footer>
-        <p>合計金額： {total}円</p>
+      <footer className="absolute bottom-0 flex items-center py-px w-screen inset-x-0 my-3">
+        <p className="flex items-center justify-center text-center h-100 mx-5">合計金額： {total}ガリオン</p>
         <button
-          className="bg-blue-500 text-white px-4 py-2 rounded mt-4"
+          className="bg-blue-500 text-white px-4 py-2 rounded mx-px my-auto"
           onClick={handleOrder}
           aria-haspopup="dialog"
           aria-expanded="false"
-          aria-controls="hs-modal-upgrade-to-pro"
-          data-hs-overlay="#hs-modal-upgrade-to-pro"
         >
           注文する
         </button>
@@ -120,7 +125,7 @@ function AccordionItem(props) {
     <div className="border-b py-2">
       <div onClick={onClick} className="flex justify-between cursor-pointer">
         <span className="text-lg">{name}</span>
-        <span className="text-lg">{price}円</span>
+        <span className="text-lg">@ {price}ガリオン</span>
       </div>
       {isOpen && (
         <div className="mt-2 flex items-center">
@@ -134,17 +139,12 @@ function AccordionItem(props) {
         </div>
       )}
       <div onClick={onClick} className="mt-2">
-        <span>数量: {quantity}  </span>
-        <span>小計: {price * quantity}円</span>
+        <span>数量: {quantity}個  </span>
+        <span>小計: {price * quantity}ガリオン</span>
       </div>
     </div>
   );
 }
-
-socket.on('order_end', function (data) {
-  // todo: ログを表示
-  console.log(data.orderID);
-});
 
 console.log("Hello from React");
 const container = document.getElementById("root");

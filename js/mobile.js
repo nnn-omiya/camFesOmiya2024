@@ -1,13 +1,8 @@
-const socket = io.connect(`http://${server_address}:8080`, { transports: [ 'websocket' ] });
+const socket = io.connect(`//${server_address}:8080`, { transports: [ 'websocket' ] });
 
 function App() {
-  const [menuItems, setMenuItems] = React.useState([
-    { name: 'ミルクティー', price: 2 },
-    { name: 'アイスティー', price: 2 },
-    { name: '紅茶', price: 2 },
-  ]);
+  const [menuItems, setMenuItems] = React.useState([]);
   const [order, setOrder] = React.useState(initialOrder());
-  const [isOrdered, setIsOrdered] = React.useState(false);
   const [total, setTotal] = React.useState(0);
   const [orderID, setOrderID] = React.useState("0");
 
@@ -17,9 +12,9 @@ function App() {
         return response.json()
       })
       .then((result) => {
+        console.log(result)
         setMenuItems(result)
         console.log(result)
-        addButton()
       })
       .catch((e) => {
         console.log(e)
@@ -27,12 +22,17 @@ function App() {
   }, [])
 
   React.useEffect(() => {
+    console.log("order changed");
     console.log(order);
+    console.log(menuItems);
     setTotal(order.reduce((sum, item) => {
       const price = menuItems.find(menuItem => menuItem.name === item.item).price;
       return sum + price * item.quantity
     }, 0));
   }, [order]);
+  React.useEffect(() => {
+    setOrder(initialOrder());
+  }, [menuItems])
 
   function initialOrder() {
     return menuItems.map(item => ({ item: item.name, quantity: 0 }));

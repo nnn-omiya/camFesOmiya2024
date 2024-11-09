@@ -22,7 +22,6 @@ function App() {
   }, [])
 
   React.useEffect(() => {
-    console.log("order changed");
     console.log(order);
     console.log(menuItems);
     setTotal(order.reduce((sum, item) => {
@@ -45,34 +44,51 @@ function App() {
       socket.emit('order', JSON.stringify(data));
       console.log(JSON.stringify(data));
     }
-    setOrder(initialOrder());
   }
 
   socket.on('order_end', (data) => {
-    setOrderID(data.orderID);
+    if (data.orderID != orderID) {
+      setOrderID(data.orderID);
+    }
     console.log(data.orderID);
   });
 
   return (
-    <div className="p-4 relative w-screen h-screen">
-      <h1 className="text-xl font-bold mb-4">イノキャン紅茶店()</h1>
-      <AccordionMenu
-        menuItems={menuItems}
-        order={order}
-        setOrder={setOrder}
-      />
-      <footer className="absolute bottom-0 flex items-center py-px w-screen inset-x-0 my-3">
-        <p className="flex items-center justify-center text-center h-100 mx-5">合計金額： {total}ガリオン</p>
-        <button
-          className="bg-blue-500 text-white px-4 py-2 rounded mx-px my-auto"
-          onClick={handleOrder}
-          aria-haspopup="dialog"
-          aria-expanded="false"
-        >
-          注文する
-        </button>
-      </footer>
-    </div>
+    <React.Fragment>
+      {orderID === "0" ? (
+        <div className="p-4 relative w-screen h-screen">
+          <h1 className="text-xl font-bold mb-4">イノキャン紅茶店()</h1>
+          <AccordionMenu
+            menuItems={menuItems}
+            order={order}
+            setOrder={setOrder}
+          />
+          <footer className="absolute bottom-0 flex items-center py-px w-screen inset-x-0 my-3">
+            <p className="flex items-center justify-center text-center h-100 mx-5">合計金額： {total}ガリオン</p>
+            <button
+              className="bg-blue-500 text-white px-4 py-2 rounded mx-px my-auto"
+              onClick={handleOrder}
+              aria-haspopup="dialog"
+              aria-expanded="false"
+            >
+              注文する
+            </button>
+          </footer>
+        </div>
+      ): (
+        <div>
+          <h3>注文を受け付けました。注文番号は{orderID}です。</h3>
+          <h4>あなたの注文内容</h4>
+          <ul>
+            {order.map(item => item.quantity != 0 ? (
+              <li key={item.item}>
+                {item.item} x {item.quantity}
+              </li>
+            ): null)}
+          </ul>
+        </div>
+      )}
+    </React.Fragment>
   );
 }
 

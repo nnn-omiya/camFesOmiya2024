@@ -4,6 +4,7 @@ function App() {
   const [menuItems, setMenuItems] = React.useState([]);
   const [order, setOrder] = React.useState(initialOrder());
   const [total, setTotal] = React.useState(0);
+  const [isComplete, setIsComplete] = React.useState(false);
   const [orderID, setOrderID] = React.useState("0");
 
   React.useEffect(() => {
@@ -41,7 +42,10 @@ function App() {
     const data = [{ type: "mobile" }];
     if (order.reduce((sum, item) => sum + item.quantity, 0) > 0) {
       data.push(...order);
-      socket.emit('order', JSON.stringify(data));
+      if (!isComplete) {
+        socket.emit('order', JSON.stringify(data));
+        setIsComplete(true);
+      }
       console.log(JSON.stringify(data));
     }
   }
@@ -79,6 +83,7 @@ function App() {
         <div>
           <h3>注文を受け付けました。注文番号は{orderID}です。</h3>
           <h4>あなたの注文内容</h4>
+          <h5>合計金額： {total}ガリオン</h5>
           <ul>
             {order.map(item => item.quantity != 0 ? (
               <li key={item.item}>
@@ -86,6 +91,7 @@ function App() {
               </li>
             ): null)}
           </ul>
+          <p></p>
         </div>
       )}
     </React.Fragment>

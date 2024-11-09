@@ -62,6 +62,7 @@ function App() {
       {orderID === "0" ? (
         <div className="w-full h-full">
           <h1 className="text-xl font-bold mb-4">ヴィクトリア半自動紅茶</h1>
+          <p>このオーダーは<span className="text-red-500">8階</span>にお届けします。</p>
           <AccordionMenu
             menuItems={menuItems}
             order={order}
@@ -91,7 +92,7 @@ function App() {
             ) : null)}
           </ul>
           <p className="mt-4 text-sm text-gray-700">
-            8階の飲食スペースにあるモニター付近でモバイルオーダーの受け渡しを行います。<br />
+            <span className="text-red-500">8階の飲食スペースにあるモニター付近</span>でモバイルオーダーの受け渡しを行います。<br />
             この画面を受け渡し係に提示していただくことで受け渡しが完了します。
           </p>
         </div>

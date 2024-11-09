@@ -1,2 +1,2 @@
-const server_address = "10.8.100.117"
-const api_url = `http://${server_address}:8080`;
+const server_address = "https://camfes-api.chigayuki.com"
+const api_url = server_address;

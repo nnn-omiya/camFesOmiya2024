@@ -60,7 +60,7 @@ function App() {
   return (
     <React.Fragment>
       {orderID === "0" ? (
-        <div className="p-4 relative w-screen h-screen">
+        <div className="p-4 relative w-screen h-dvh">
           <h1 className="text-xl font-bold mb-4">イノキャン紅茶店()</h1>
           <AccordionMenu
             menuItems={menuItems}

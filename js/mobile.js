@@ -58,43 +58,45 @@ function App() {
   });
 
   return (
-    <React.Fragment>
+    <div className="p-4 relative w-screen h-dvh">
       {orderID === "0" ? (
-        <div className="p-4 relative w-screen h-dvh">
-          <h1 className="text-xl font-bold mb-4">イノキャン紅茶店()</h1>
+        <div className="w-full h-full">
+          <h1 className="text-xl font-bold mb-4">ヴィクトリア半自動紅茶</h1>
           <AccordionMenu
             menuItems={menuItems}
             order={order}
             setOrder={setOrder}
           />
-          <footer className="absolute bottom-0 flex items-center py-px w-screen inset-x-0 my-3">
-            <p className="flex items-center justify-center text-center h-100 mx-5">合計金額： {total}ガリオン</p>
+          <footer className="fixed bottom-0 inset-x-px mx-2 flex items-center justify-between bg-gray-100 p-4 shadow">
+            <p className="text-lg font-semibold text-gray-800">合計金額： {total}ガリオン</p>
             <button
-              className="bg-blue-500 text-white px-4 py-2 rounded mx-px my-auto"
+              className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 active:bg-blue-800 transition-colors"
               onClick={handleOrder}
-              aria-haspopup="dialog"
-              aria-expanded="false"
             >
               注文する
             </button>
           </footer>
         </div>
       ): (
-        <div>
-          <h3>注文を受け付けました。注文番号は{orderID}です。</h3>
-          <h4>あなたの注文内容</h4>
-          <h5>合計金額： {total}ガリオン</h5>
-          <ul>
-            {order.map(item => item.quantity != 0 ? (
-              <li key={item.item}>
+        <div className="w-full h-full p-6 bg-white shadow-md">
+          <h3 className="text-2xl font-bold text-green-600">注文を受け付けました。</h3>
+          <h3 className="text-2xl text-green-600">注文番号：<span className="text-3xl">{orderID}</span>です。</h3>
+          <h4 className="mt-4 text-xl font-semibold">あなたの注文内容</h4>
+          <h5 className="mt-2 text-lg">合計金額： {total}ガリオン</h5>
+          <ul className="mt-2 list-disc list-inside">
+            {order.map(item => item.quantity !== 0 ? (
+              <li key={item.item} className="py-1">
                 {item.item} x {item.quantity}
               </li>
-            ): null)}
+            ) : null)}
           </ul>
-          <p></p>
+          <p className="mt-4 text-sm text-gray-700">
+            8階の飲食スペースにあるモニター付近でモバイルオーダーの受け渡しを行います。<br />
+            この画面を受け渡し係に提示していただくことで受け渡しが完了します。
+          </p>
         </div>
       )}
-    </React.Fragment>
+    </div>
   );
 }
 
@@ -144,31 +146,47 @@ function AccordionItem(props) {
   const { name, price, quantity, onInc, onDec, onClick, isOpen } = props;
 
   return (
-    <div className="border-b py-2">
-      <div onClick={onClick} className="flex justify-between cursor-pointer">
-        <span className="text-lg">{name}</span>
-        <span className="text-lg">@ {price}ガリオン</span>
+    <div className="border-b">
+      <div
+        onClick={onClick}
+        className="flex justify-between items-center cursor-pointer p-4 hover:bg-gray-100"
+      >
+        <span className="text-lg font-semibold">{name}</span>
+        <div className="flex items-center">
+          <span className="text-sm text-gray-600 mr-2">@ {price}ガリオン</span>
+          <svg
+            className={`w-5 h-5 transform transition-transform duration-200 ${
+              isOpen ? 'rotate-180' : ''
+            }`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
       </div>
       {isOpen && (
-        <div className="mt-2 flex items-center">
-          <button onClick={onDec} className="px-2 py-1 border rounded-l">
-            －
-          </button>
-          <span className="px-4">{quantity}</span>
-          <button onClick={onInc} className="px-2 py-1 border rounded-r">
-            ＋
-          </button>
+        <div className="p-4 bg-gray-50">
+          <div className="flex items-center">
+            <button onClick={onDec} className="px-3 py-1 border rounded-l">
+              －
+            </button>
+            <span className="px-4 text-lg">{quantity}</span>
+            <button onClick={onInc} className="px-3 py-1 border rounded-r">
+              ＋
+            </button>
+          </div>
+          <div className="mt-2 flex justify-between text-sm">
+            <span>数量: {quantity}個</span>
+            <span>小計: {price * quantity}ガリオン</span>
+          </div>
         </div>
       )}
-      <div onClick={onClick} className="mt-2">
-        <span>数量: {quantity}個  </span>
-        <span>小計: {price * quantity}ガリオン</span>
-      </div>
     </div>
   );
 }
 
-console.log("Hello from React");
 const container = document.getElementById("root");
 const root = ReactDOM.createRoot(container);
 root.render(<App />);

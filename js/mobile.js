@@ -1,4 +1,4 @@
-const socket = io.connect(`//${server_address}:8080`, { transports: [ 'websocket' ] });
+const socket = io.connect(server_address, { transports: [ 'websocket' ] });
 
 function App() {
   const [menuItems, setMenuItems] = React.useState([]);

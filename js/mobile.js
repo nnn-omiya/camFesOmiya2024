@@ -1,6 +1,13 @@
 const socket = io.connect(server_address, { transports: [ 'websocket' ] });
 
 function App() {
+  return (
+    <div >
+      <div>完売です！</div>
+      <p>40杯売り切ることができました！</p>
+      <p>ありがとうございました！</p>
+    </div>
+  )
   const [menuItems, setMenuItems] = React.useState([]);
   const [order, setOrder] = React.useState(initialOrder());
   const [total, setTotal] = React.useState(0);

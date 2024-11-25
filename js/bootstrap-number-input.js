@@ -51,7 +51,7 @@
 				clone.trigger('change');
 
 				//支払金額の計算
-				$("#total").text(recalc()+"円");
+				$("#total").text(recalc()+"ガリオン");
 				return true;
 			}
 

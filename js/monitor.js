@@ -14,6 +14,13 @@ socket.on('updateMonitor', function (data) {
   console.log(data);
 });
 
+socket.on('updateMonitor2', function (data) {
+  const elements = document.querySelectorAll("p");
+  const filterElements = Array.from(elements)
+  .filter((element)=> element.textContent === data);
+  filterElements[0].remove()
+});
+
 socket.on('order_share', (message) => {
   orders = test(message);
   outputQue(message)
@@ -32,42 +39,13 @@ fetch(api_url + "/getorder")
     console.log(e)  //エラーをキャッチし表示
   });
 
-  function test(orders) {
-    const mergedOrders = orders.reduce((acc, current) => {
-      const { orderID, item, quantity, flag} = current;
-      
-      // 既存の orderID があるか確認
-      let existingOrder = acc.find(order => order.orderID === orderID);
-      
-      if (existingOrder) {
-        // 同じ商品名がある場合、数量を加算
-        let existingItem = existingOrder.items.find(i => i.item === item);
-        if (existingItem) {
-          existingItem.quantity += parseInt(quantity, 10);
-        } else {
-          // 新しい商品名の場合、追加
-          existingOrder.items.push({ item, quantity: parseInt(quantity, 10) });
-        }
-      } else {
-        // orderID が存在しない場合、新しいエントリを作成
-        acc.push({
-          orderID: orderID,
-          items: [{ item, quantity: parseInt(quantity, 10) }],
-          flag: flag
-        });
-      }
-      
-      return acc;
-    }, []);
-    return mergedOrders;
-    }
-
   function outputQue(orderes) {
     orders.forEach(order => {
       if (order["flag"] == 0) {
         document.querySelector("#que").insertAdjacentHTML('beforeend', "<p>"+ order["orderID"] +"</p>")
       } else if (order["flag"] == 1) {
         document.querySelector("#complete").insertAdjacentHTML('beforeend', "<p>"+ order["orderID"] +"</p>")
+      } else if (order["flag"] == 2 || order["flag"] == 99) {
       }
     });
   }

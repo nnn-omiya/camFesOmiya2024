@@ -43,13 +43,17 @@ function addMenu(data) {
   let menuA = document.importNode(template.content, true)
   menuA.querySelector("label").innerText = data.name
   menuA.querySelector("input").dataset.name = data.name
-  menuA.querySelector("p").innerText = "@"+data.price+"円"
+  menuA.querySelector("p").innerText = "@"+data.price+"ガリオン"
   menuA.getElementById("price").value = parseInt(data.price)
   menus.appendChild(menuA)
 }
 
 async function send_data(e) {
   e.preventDefault();
+  if (document.querySelector("#total").textContent.charAt(0) == 0) {
+    toastr.error('空注文はできません', 'エラー')
+    return false;
+  }
   //代金を受け取ったかポップアップを出す
 
   //代金を受け取っていれば送信する
@@ -63,7 +67,7 @@ async function send_data(e) {
 
   blockUI.showOverlayAsync();
   socket.emit('order', JSON.stringify(data));
-  audio.src='ok.mp3';
+  audio.src='./res/ok.mp3';
   audio.play(); //audioを再生
 }
 
@@ -105,7 +109,7 @@ document.querySelector('#keypad').addEventListener('click', (event) => {
       //クリアオール処理
       clearAll();
     }
-    $("#total").text(recalc()+"円");
+    $("#total").text(recalc()+"ガリオン");
   }
 });
 

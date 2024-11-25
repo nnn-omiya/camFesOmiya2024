@@ -16,36 +16,6 @@ var socket = io.connect('http://'+ server_address +':8080', { transports: [ 'web
         console.log(e)  //エラーをキャッチし表示
     });
 
-function test(orders) {
-const mergedOrders = orders.reduce((acc, current) => {
-  const { orderID, item, quantity, flag} = current;
-  
-  // 既存の orderID があるか確認
-  let existingOrder = acc.find(order => order.orderID === orderID);
-  
-  if (existingOrder) {
-    // 同じ商品名がある場合、数量を加算
-    let existingItem = existingOrder.items.find(i => i.item === item);
-    if (existingItem) {
-      existingItem.quantity += parseInt(quantity, 10);
-    } else {
-      // 新しい商品名の場合、追加
-      existingOrder.items.push({ item, quantity: parseInt(quantity, 10) });
-    }
-  } else {
-    // orderID が存在しない場合、新しいエントリを作成
-    acc.push({
-      orderID: orderID,
-      items: [{ item, quantity: parseInt(quantity, 10) }],
-      flag: flag
-    });
-  }
-  
-  return acc;
-}, []);
-return mergedOrders;
-}
-
 function insertHeader(data) {
   let html = "";
   html += '<thead class="thead-dark">';
@@ -62,23 +32,43 @@ function insertHeader(data) {
 
 function insertTable(orders) {
   html = "";
-  console.log(orders);
+  //console.log(orders);
   orders.forEach((order) => {
+    if (order["flag"] == 2) { return }
     html += '<tr>';
     html += '<td>'+ order["orderID"] +'</td>'
     html += '';
     order.items.forEach(item => {
-      html += '<td>'+ item["quantity"] +'個</td>'
+      if (item["quantity"] != 0) {
+        html += '<td>'+ item["quantity"] +'個</td>'
+      } else {
+        html += '<td></td>'
+      }
     });
-    html += '<td><a onclick="serve(\''+ order["orderID"] +'\')" class="serve-btn btn btn-outline-success btn-sm">提供可能</a></td>'
+    if (order["flag"] == 0) { html += '<td><a onclick="serve(\''+ order["orderID"] +'\')" class="serve-btn btn btn-outline-success btn-sm">提供可能</a></td>' }
+    if (order["flag"] == 1) { html += '<td><a onclick="complete(\''+ order["orderID"] +'\')" class="serve-btn btn btn-outline-success btn-sm">受け渡しました</a></td>' }
     html += '</tr>';
   });
-  console.log(html)
+  //console.log(html)
   document.querySelector("#main-table").insertAdjacentHTML('beforeend', html)
 }
 
-function serve(orderID) {
+function serve(orderID) { //提供可能ボタンを押した時
+  const elements = document.querySelectorAll("td");
+  const filterElements = Array.from(elements)
+  .filter((element)=> element.textContent === orderID);
+  let button = filterElements[0].parentElement.querySelector(".serve-btn");
+  button.setAttribute('onclick', `complete("${orderID}")`);
+  button.innerText = "受け渡しました"
   socket.emit('available', orderID);
+}
+
+function complete(orderID) {
+  const elements = document.querySelectorAll("td");
+  const filterElements = Array.from(elements)
+  .filter((element)=> element.textContent === orderID);
+  filterElements[0].parentElement.remove();
+  socket.emit('complete', orderID);
 }
 
 socket.on('connected', function (data) {
@@ -89,6 +79,25 @@ socket.on('disconnect', function (data) {
   socket.disconnect();
 });
 socket.on('order_share', (message) => {
-  console.log(message)
+  audio.src='./res/ok.mp3';
+  audio.play(); //audioを再生
   insertTable(message)
+});
+
+socket.on('updateMonitor', function (data) {
+  const elements = document.querySelectorAll("td");
+  const filterElements = Array.from(elements)
+  .filter((element)=> element.textContent === data);
+  let button = filterElements[0].parentElement.querySelector(".serve-btn");
+  button.setAttribute('onclick', `complete("${data}")`);
+  button.innerText = "受け渡しました"
+});
+
+//受け渡し済みのときのやつ
+socket.on('updateMonitor2', function (data) {
+  const elements = document.querySelectorAll("td");
+  const filterElements = Array.from(elements)
+  .filter((element)=> element.textContent === data);
+  filterElements[0].parentElement.remove();
+  socket.emit('complete', orderID);
 });
